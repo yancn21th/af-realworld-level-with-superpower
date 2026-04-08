@@ -1,0 +1,95 @@
+<h2>Design Section 3: Backend & Frontend Structure</h2>
+<p class="subtitle">Hono routes · React pages · Error handling · Testing</p>
+
+<div class="section">
+  <h3>Backend — Hono Route Layout</h3>
+  <div class="mockup">
+    <div class="mockup-header">apps/api/src/routes/</div>
+    <div class="mockup-body" style="padding:14px;font-size:13px;font-family:monospace;line-height:1.9;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <strong style="font-family:sans-serif;color:#555;">Route files</strong><br>
+          auth.ts &nbsp;&nbsp;&nbsp;&nbsp;→ POST /users, POST /users/login<br>
+          user.ts &nbsp;&nbsp;&nbsp;&nbsp;→ GET/PUT /user<br>
+          profiles.ts → GET /profiles/:username<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POST/DELETE .../follow<br>
+          articles.ts → GET/POST /articles<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GET /articles/feed<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GET/PUT/DELETE /articles/:slug<br>
+          comments.ts → GET/POST/DELETE .../comments<br>
+          favorites.ts→ POST/DELETE .../favorite<br>
+          tags.ts &nbsp;&nbsp;&nbsp;&nbsp;→ GET /tags
+        </div>
+        <div>
+          <strong style="font-family:sans-serif;color:#555;">Middleware</strong><br>
+          auth.middleware.ts<br>
+          &nbsp; — verifies JWT Bearer token<br>
+          &nbsp; — sets c.var.userId<br>
+          &nbsp; — optional (some routes public)<br><br>
+          error.middleware.ts<br>
+          &nbsp; — catches thrown errors<br>
+          &nbsp; — returns { errors: { body: [...] } }<br>
+          &nbsp; — maps to 401/404/422 per spec
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Frontend — React Pages & Components</h3>
+  <div class="mockup">
+    <div class="mockup-header">apps/web/src/</div>
+    <div class="mockup-body" style="padding:14px;font-size:13px;font-family:monospace;line-height:1.9;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <strong style="font-family:sans-serif;color:#555;">Pages (routes)</strong><br>
+          / &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Home (feed + global)<br>
+          /login &nbsp;&nbsp;&nbsp;&nbsp;→ Sign In<br>
+          /register &nbsp;→ Sign Up<br>
+          /editor &nbsp;&nbsp;&nbsp;→ New Article<br>
+          /editor/:slug → Edit Article<br>
+          /article/:slug→ Article View<br>
+          /profile/:user→ User Profile<br>
+          /settings &nbsp;→ User Settings
+        </div>
+        <div>
+          <strong style="font-family:sans-serif;color:#555;">Shared Components</strong><br>
+          &lt;Header /&gt; — nav + auth state<br>
+          &lt;Footer /&gt; — static<br>
+          &lt;ArticleList /&gt; — paginated feed<br>
+          &lt;ArticlePreview /&gt; — card<br>
+          &lt;TagList /&gt; — sidebar tags<br>
+          &lt;CommentSection /&gt;<br>
+          &lt;ErrorMessages /&gt; — .error-messages<br>
+          &lt;Pagination /&gt;
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Error Handling & Testing Strategy</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px;">
+    <div style="background:#fff3e0;border-radius:6px;padding:12px;">
+      <strong>API Error Responses</strong><br><br>
+      All errors → <code>{ errors: { body: ["msg"] } }</code><br>
+      401 — missing/invalid JWT<br>
+      403 — forbidden (not owner)<br>
+      404 — article/user not found<br>
+      409 — email/username taken<br>
+      422 — validation failed
+    </div>
+    <div style="background:#e8f5e9;border-radius:6px;padding:12px;">
+      <strong>Test Suite (primary goal)</strong><br><br>
+      ✅ Bruno / Hurl API tests from <code>specs/api/</code><br>
+      Run with: <code>run-api-tests-hurl.sh</code><br><br>
+      Secondary:<br>
+      Playwright E2E from <code>specs/e2e/</code><br>
+      (auth, articles, comments, social)
+    </div>
+  </div>
+</div>
+
+<p style="color:#555;font-size:13px;margin-top:16px;">Does this backend + frontend layout look right? Let me know in the terminal.</p>

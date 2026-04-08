@@ -1,0 +1,5 @@
+{"type":"server-started","port":51527,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:51527","screen_dir":"/Users/ai-hub/coding/g-fullstack/af-how-we-create/af-realworld-with-superpower/.superpowers/brainstorm/32957-1775632941/content","state_dir":"/Users/ai-hub/coding/g-fullstack/af-how-we-create/af-realworld-with-superpower/.superpowers/brainstorm/32957-1775632941/state"}
+{"type":"screen-added","file":"/Users/ai-hub/coding/g-fullstack/af-how-we-create/af-realworld-with-superpower/.superpowers/brainstorm/32957-1775632941/content/architecture.html"}
+{"type":"screen-added","file":"/Users/ai-hub/coding/g-fullstack/af-how-we-create/af-realworld-with-superpower/.superpowers/brainstorm/32957-1775632941/content/data-model.html"}
+{"type":"screen-added","file":"/Users/ai-hub/coding/g-fullstack/af-how-we-create/af-realworld-with-superpower/.superpowers/brainstorm/32957-1775632941/content/backend-frontend.html"}
+{"type":"server-stopped","reason":"idle timeout"}

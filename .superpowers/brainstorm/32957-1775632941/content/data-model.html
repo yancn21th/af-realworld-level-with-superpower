@@ -1,0 +1,102 @@
+<h2>Design Section 2: Database Schema</h2>
+<p class="subtitle">Drizzle ORM · SQLite · 5 core tables</p>
+
+<div class="section">
+  <div class="mockup">
+    <div class="mockup-header">Entity Relationship Diagram</div>
+    <div class="mockup-body" style="padding:20px;overflow-x:auto;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;min-width:600px;font-size:12px;font-family:monospace;">
+
+        <!-- users -->
+        <div style="border:2px solid #90caf9;border-radius:8px;overflow:hidden;">
+          <div style="background:#e3f2fd;padding:8px 12px;font-weight:bold;font-size:13px;">👤 users</div>
+          <div style="padding:10px 12px;line-height:2;">
+            <span style="color:#e53935;">PK</span> id INTEGER<br>
+            username TEXT UNIQUE<br>
+            email TEXT UNIQUE<br>
+            password_hash TEXT<br>
+            bio TEXT (nullable)<br>
+            image TEXT (nullable)<br>
+            created_at INTEGER<br>
+            updated_at INTEGER
+          </div>
+        </div>
+
+        <!-- articles -->
+        <div style="border:2px solid #a5d6a7;border-radius:8px;overflow:hidden;">
+          <div style="background:#e8f5e9;padding:8px 12px;font-weight:bold;font-size:13px;">📰 articles</div>
+          <div style="padding:10px 12px;line-height:2;">
+            <span style="color:#e53935;">PK</span> id INTEGER<br>
+            <span style="color:#fb8c00;">FK</span> author_id → users<br>
+            slug TEXT UNIQUE<br>
+            title TEXT<br>
+            description TEXT<br>
+            body TEXT<br>
+            created_at INTEGER<br>
+            updated_at INTEGER
+          </div>
+        </div>
+
+        <!-- comments -->
+        <div style="border:2px solid #ffcc80;border-radius:8px;overflow:hidden;">
+          <div style="background:#fff3e0;padding:8px 12px;font-weight:bold;font-size:13px;">💬 comments</div>
+          <div style="padding:10px 12px;line-height:2;">
+            <span style="color:#e53935;">PK</span> id INTEGER<br>
+            <span style="color:#fb8c00;">FK</span> article_id → articles<br>
+            <span style="color:#fb8c00;">FK</span> author_id → users<br>
+            body TEXT<br>
+            created_at INTEGER<br>
+            updated_at INTEGER
+          </div>
+        </div>
+
+        <!-- tags (junction) -->
+        <div style="border:2px solid #ce93d8;border-radius:8px;overflow:hidden;">
+          <div style="background:#f3e5f5;padding:8px 12px;font-weight:bold;font-size:13px;">🏷️ article_tags</div>
+          <div style="padding:10px 12px;line-height:2;">
+            <span style="color:#fb8c00;">FK</span> article_id → articles<br>
+            tag TEXT<br>
+            <br>
+            <span style="color:#888;font-style:italic;">(composite PK)</span>
+          </div>
+        </div>
+
+        <!-- favorites -->
+        <div style="border:2px solid #f48fb1;border-radius:8px;overflow:hidden;">
+          <div style="background:#fce4ec;padding:8px 12px;font-weight:bold;font-size:13px;">❤️ favorites</div>
+          <div style="padding:10px 12px;line-height:2;">
+            <span style="color:#fb8c00;">FK</span> user_id → users<br>
+            <span style="color:#fb8c00;">FK</span> article_id → articles<br>
+            <br>
+            <span style="color:#888;font-style:italic;">(composite PK)</span>
+          </div>
+        </div>
+
+        <!-- follows -->
+        <div style="border:2px solid #80cbc4;border-radius:8px;overflow:hidden;">
+          <div style="background:#e0f2f1;padding:8px 12px;font-weight:bold;font-size:13px;">👥 follows</div>
+          <div style="padding:10px 12px;line-height:2;">
+            <span style="color:#fb8c00;">FK</span> follower_id → users<br>
+            <span style="color:#fb8c00;">FK</span> following_id → users<br>
+            <br>
+            <span style="color:#888;font-style:italic;">(composite PK)</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Key design decisions</h3>
+  <ul style="font-size:14px;line-height:2;padding-left:20px;">
+    <li>Tags are stored inline in <code>article_tags</code> (no separate tags table) — keeps queries simple, matches spec's flat tag list</li>
+    <li>Timestamps stored as INTEGER (Unix ms) — SQLite-native, no timezone issues</li>
+    <li>Slugs are <code>slugify(title) + '-' + randomId</code> to ensure uniqueness on duplicate titles</li>
+    <li>Passwords hashed with <strong>bcrypt</strong> (cost 10)</li>
+    <li>JWT tokens: signed with <strong>HS256</strong>, payload = <code>{ sub: userId }</code></li>
+  </ul>
+</div>
+
+<p style="color:#555;font-size:13px;">Does this data model look right? Let me know in the terminal.</p>

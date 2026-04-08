@@ -1,0 +1,9 @@
+{
+  "name": "shared",
+  "private": true,
+  "exports": {
+    ".": {
+      "import": "./src/types.ts"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "realworld-app",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter api dev\" \"pnpm --filter web dev\"",
+    "test:api": "HOST=http://localhost:8000 bash realworld/specs/api/run-api-tests-hurl.sh",
+    "test:e2e": "pnpm --filter web exec playwright test"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.4.0"
+  }
+}

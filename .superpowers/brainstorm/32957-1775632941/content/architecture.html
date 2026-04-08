@@ -1,0 +1,99 @@
+<h2>Design Section 1: Architecture Overview</h2>
+<p class="subtitle">Full-stack RealWorld — Hono + React + Drizzle + SQLite — Monorepo</p>
+
+<div class="section">
+  <h3>Monorepo Structure</h3>
+  <div class="mockup">
+    <div class="mockup-header">Project Layout</div>
+    <div class="mockup-body">
+      <pre style="font-family:monospace;font-size:13px;line-height:1.7;margin:0;padding:12px;">
+realworld-app/
+├── apps/
+│   ├── api/                 ← Hono backend
+│   │   ├── src/
+│   │   │   ├── routes/      ← /users, /articles, /profiles, etc.
+│   │   │   ├── middleware/  ← JWT auth, error handler
+│   │   │   ├── db/          ← Drizzle schema + migrations
+│   │   │   └── index.ts     ← Entry point
+│   │   └── package.json
+│   └── web/                 ← React + Vite SPA
+│       ├── src/
+│       │   ├── pages/       ← Home, Login, Editor, Profile...
+│       │   ├── components/  ← ArticleList, Header, Footer...
+│       │   ├── api/         ← API client (fetch wrappers)
+│       │   └── main.tsx
+│       └── package.json
+├── packages/
+│   └── shared/              ← Shared TypeScript types
+│       └── src/types.ts
+├── specs/                   ← (symlink or copy of realworld specs)
+└── package.json             ← pnpm workspace root
+      </pre>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Data Flow</h3>
+  <div class="mockup">
+    <div class="mockup-header">Request → Response</div>
+    <div class="mockup-body" style="padding:16px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px;">
+        <div style="background:#e3f2fd;border:1px solid #90caf9;border-radius:6px;padding:8px 14px;">Browser (React SPA)</div>
+        <div style="font-size:18px;color:#666;">→</div>
+        <div style="background:#f3e5f5;border:1px solid #ce93d8;border-radius:6px;padding:8px 14px;">Hono Router</div>
+        <div style="font-size:18px;color:#666;">→</div>
+        <div style="background:#fff3e0;border:1px solid #ffcc80;border-radius:6px;padding:8px 14px;">JWT Middleware</div>
+        <div style="font-size:18px;color:#666;">→</div>
+        <div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:6px;padding:8px 14px;">Route Handler</div>
+        <div style="font-size:18px;color:#666;">→</div>
+        <div style="background:#fce4ec;border:1px solid #f48fb1;border-radius:6px;padding:8px 14px;">Drizzle ORM</div>
+        <div style="font-size:18px;color:#666;">→</div>
+        <div style="background:#e0f2f1;border:1px solid #80cbc4;border-radius:6px;padding:8px 14px;">SQLite DB</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>API Coverage (from openapi.yml)</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:13px;">
+    <div style="background:#f5f5f5;border-radius:6px;padding:10px;">
+      <strong>👤 User & Auth</strong><br>
+      POST /users/login<br>
+      POST /users<br>
+      GET /user<br>
+      PUT /user
+    </div>
+    <div style="background:#f5f5f5;border-radius:6px;padding:10px;">
+      <strong>📰 Articles</strong><br>
+      GET /articles<br>
+      GET /articles/feed<br>
+      POST /articles<br>
+      GET/PUT/DELETE /articles/:slug
+    </div>
+    <div style="background:#f5f5f5;border-radius:6px;padding:10px;">
+      <strong>💬 Comments</strong><br>
+      GET /articles/:slug/comments<br>
+      POST /articles/:slug/comments<br>
+      DELETE /articles/:slug/comments/:id
+    </div>
+    <div style="background:#f5f5f5;border-radius:6px;padding:10px;">
+      <strong>❤️ Favorites</strong><br>
+      POST /articles/:slug/favorite<br>
+      DELETE /articles/:slug/favorite
+    </div>
+    <div style="background:#f5f5f5;border-radius:6px;padding:10px;">
+      <strong>👥 Profiles</strong><br>
+      GET /profiles/:username<br>
+      POST /profiles/:username/follow<br>
+      DELETE /profiles/:username/follow
+    </div>
+    <div style="background:#f5f5f5;border-radius:6px;padding:10px;">
+      <strong>🏷️ Tags</strong><br>
+      GET /tags
+    </div>
+  </div>
+</div>
+
+<p style="margin-top:20px;color:#555;font-size:13px;">Does this architecture look right? Let me know in the terminal.</p>
