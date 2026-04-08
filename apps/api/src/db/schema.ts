@@ -13,7 +13,7 @@ export const users = sqliteTable('users', {
 
 export const articles = sqliteTable('articles', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  authorId: integer('author_id').notNull().references(() => users.id),
+  authorId: integer('author_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   slug: text('slug').notNull().unique(),
   title: text('title').notNull(),
   description: text('description').notNull(),
@@ -31,18 +31,18 @@ export const articleTags = sqliteTable('article_tags', {
 export const comments = sqliteTable('comments', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   articleId: integer('article_id').notNull().references(() => articles.id, { onDelete: 'cascade' }),
-  authorId: integer('author_id').notNull().references(() => users.id),
+  authorId: integer('author_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   body: text('body').notNull(),
   createdAt: integer('created_at').notNull(),
   updatedAt: integer('updated_at').notNull(),
 });
 
 export const favorites = sqliteTable('favorites', {
-  userId: integer('user_id').notNull().references(() => users.id),
+  userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   articleId: integer('article_id').notNull().references(() => articles.id, { onDelete: 'cascade' }),
 }, (t) => ({ pk: primaryKey({ columns: [t.userId, t.articleId] }) }));
 
 export const follows = sqliteTable('follows', {
-  followerId: integer('follower_id').notNull().references(() => users.id),
-  followingId: integer('following_id').notNull().references(() => users.id),
+  followerId: integer('follower_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  followingId: integer('following_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
 }, (t) => ({ pk: primaryKey({ columns: [t.followerId, t.followingId] }) }));
