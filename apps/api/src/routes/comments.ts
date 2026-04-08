@@ -64,7 +64,7 @@ router.delete('/articles/:slug/comments/:id', requireAuth, async (c) => {
   const article = await db.query.articles.findFirst({ where: eq(articles.slug, c.req.param('slug')) });
   if (!article) return c.json({ errors: { article: ['not found'] } }, 404);
   const comment = await db.query.comments.findFirst({ where: eq(comments.id, commentId) });
-  if (!comment) return c.json({ errors: { comment: ['not found'] } }, 404);
+  if (!comment || comment.articleId !== article.id) return c.json({ errors: { comment: ['not found'] } }, 404);
   if (comment.authorId !== userId) return c.json({ errors: { comment: ['forbidden'] } }, 403);
   await db.delete(comments).where(eq(comments.id, commentId));
   return c.body(null, 204);
