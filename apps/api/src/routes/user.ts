@@ -29,7 +29,7 @@ router.put('/user', requireAuth, async (c) => {
 
   if (raw.username !== undefined) updates.username = raw.username;
   if (raw.email !== undefined) updates.email = raw.email;
-  if (raw.password !== undefined && raw.password !== '') updates.passwordHash = await bcrypt.hash(raw.password, 10);
+  if (raw.password !== undefined && raw.password !== null && raw.password !== '') updates.passwordHash = await bcrypt.hash(raw.password, 10);
   // bio/image: normalize empty string to null
   if ('bio' in raw) updates.bio = raw.bio === '' ? null : raw.bio;
   if ('image' in raw) updates.image = raw.image === '' ? null : raw.image;

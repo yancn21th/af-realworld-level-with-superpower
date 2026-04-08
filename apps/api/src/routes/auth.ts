@@ -41,7 +41,17 @@ router.post('/users', async (c) => {
 
   const passwordHash = await bcrypt.hash(password, 10);
   const now = Date.now();
-  const [user] = await db.insert(users).values({ username, email, passwordHash, createdAt: now, updatedAt: now }).returning();
+  let user: typeof users.$inferSelect;
+  try {
+    const [inserted] = await db.insert(users).values({ username, email, passwordHash, createdAt: now, updatedAt: now }).returning();
+    user = inserted;
+  } catch (err: any) {
+    if (err?.message?.includes('UNIQUE constraint failed')) {
+      if (err.message.includes('users.username')) return c.json({ errors: { username: ['has already been taken'] } }, 409);
+      if (err.message.includes('users.email')) return c.json({ errors: { email: ['has already been taken'] } }, 409);
+    }
+    throw err;
+  }
   const token = await makeToken(user.id);
   return c.json({ user: { username: user.username, email: user.email, bio: null, image: null, token } }, 201);
 });

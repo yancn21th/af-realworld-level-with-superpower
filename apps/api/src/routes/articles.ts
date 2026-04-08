@@ -54,9 +54,9 @@ router.get('/articles', optionalAuth, async (c) => {
   let all;
   if (articleIds !== null) {
     if (!articleIds.length) return c.json({ articles: [], articlesCount: 0 });
-    all = await db.select().from(articles).where(inArray(articles.id, articleIds)).orderBy(desc(articles.createdAt));
+    all = await db.select().from(articles).where(inArray(articles.id, articleIds)).orderBy(desc(articles.createdAt), desc(articles.id));
   } else {
-    all = await db.select().from(articles).orderBy(desc(articles.createdAt));
+    all = await db.select().from(articles).orderBy(desc(articles.createdAt), desc(articles.id));
   }
 
   const articlesCount = all.length;

@@ -29,6 +29,7 @@ router.post('/profiles/:username/follow', requireAuth, async (c) => {
   const viewerId = c.get('userId');
   const target = await db.query.users.findFirst({ where: eq(users.username, c.req.param('username')) });
   if (!target) return c.json({ errors: { profile: ['not found'] } }, 404);
+  if (viewerId === target.id) return c.json({ errors: { profile: ['cannot follow yourself'] } }, 422);
   await db.insert(follows).values({ followerId: viewerId, followingId: target.id }).onConflictDoNothing();
   return c.json({ profile: { username: target.username, bio: target.bio, image: target.image, following: true } });
 });

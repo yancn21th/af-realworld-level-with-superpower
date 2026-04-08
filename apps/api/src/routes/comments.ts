@@ -61,6 +61,8 @@ router.post('/articles/:slug/comments', requireAuth, async (c) => {
 router.delete('/articles/:slug/comments/:id', requireAuth, async (c) => {
   const userId = c.get('userId');
   const commentId = Number(c.req.param('id'));
+  const article = await db.query.articles.findFirst({ where: eq(articles.slug, c.req.param('slug')) });
+  if (!article) return c.json({ errors: { article: ['not found'] } }, 404);
   const comment = await db.query.comments.findFirst({ where: eq(comments.id, commentId) });
   if (!comment) return c.json({ errors: { comment: ['not found'] } }, 404);
   if (comment.authorId !== userId) return c.json({ errors: { comment: ['forbidden'] } }, 403);
