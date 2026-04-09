@@ -4,25 +4,43 @@ import { useAuth } from '../context/AuthContext.js';
 export default function Header() {
   const { user } = useAuth();
   return (
-    <nav className="navbar navbar-light">
-      <div className="container">
-        <Link className="navbar-brand" to="/">conduit</Link>
-        <ul className="nav navbar-nav pull-xs-right">
-          <li className="nav-item"><NavLink className="nav-link" to="/">Home</NavLink></li>
+    <header
+      data-testid="header"
+      className="sticky top-0 z-50 w-full bg-surface-white border-b border-border-light"
+      style={{ boxShadow: 'rgba(0, 0, 0, 0.04) 0px 1px 4px' }}
+    >
+      <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+        <Link to="/" className="font-display text-xl font-semibold text-text-dark tracking-tight">
+          conduit
+        </Link>
+        <nav className="flex items-center gap-1">
+          <NavLink to="/" end className={({ isActive }) =>
+            `px-4 py-1.5 font-sans text-nav font-medium transition-colors rounded-pill ${isActive ? 'bg-black/5 text-text-dark' : 'text-text-secondary hover:text-text-dark hover:bg-black/[0.03]'}`
+          }>Home</NavLink>
           {user ? (
             <>
-              <li className="nav-item"><NavLink className="nav-link" to="/editor"><i className="ion-compose" />&nbsp;New Article</NavLink></li>
-              <li className="nav-item"><NavLink className="nav-link" to="/settings"><i className="ion-gear-a" />&nbsp;Settings</NavLink></li>
-              <li className="nav-item"><NavLink className="nav-link" to={`/profile/${user.username}`}>{user.username}</NavLink></li>
+              <NavLink to="/editor" className={({ isActive }) =>
+                `px-4 py-1.5 font-sans text-nav font-medium transition-colors rounded-pill ${isActive ? 'bg-black/5 text-text-dark' : 'text-text-secondary hover:text-text-dark hover:bg-black/[0.03]'}`
+              }>New Article</NavLink>
+              <NavLink to="/settings" className={({ isActive }) =>
+                `px-4 py-1.5 font-sans text-nav font-medium transition-colors rounded-pill ${isActive ? 'bg-black/5 text-text-dark' : 'text-text-secondary hover:text-text-dark hover:bg-black/[0.03]'}`
+              }>Settings</NavLink>
+              <NavLink to={`/profile/${user.username}`} className={({ isActive }) =>
+                `px-4 py-1.5 font-sans text-nav font-medium transition-colors rounded-pill ${isActive ? 'bg-black/5 text-text-dark' : 'text-text-secondary hover:text-text-dark hover:bg-black/[0.03]'}`
+              }>{user.username}</NavLink>
             </>
           ) : (
             <>
-              <li className="nav-item"><NavLink className="nav-link" to="/login">Sign in</NavLink></li>
-              <li className="nav-item"><NavLink className="nav-link" to="/register">Sign up</NavLink></li>
+              <NavLink to="/login" className={({ isActive }) =>
+                `px-4 py-1.5 font-sans text-nav font-medium transition-colors rounded-pill ${isActive ? 'bg-black/5 text-text-dark' : 'text-text-secondary hover:text-text-dark hover:bg-black/[0.03]'}`
+              }>Sign in</NavLink>
+              <NavLink to="/register" className={({ isActive }) =>
+                `px-4 py-1.5 font-sans text-nav font-medium transition-colors rounded-pill ${isActive ? 'bg-black/5 text-text-dark' : 'text-text-secondary hover:text-text-dark hover:bg-black/[0.03]'}`
+              }>Sign up</NavLink>
             </>
           )}
-        </ul>
+        </nav>
       </div>
-    </nav>
+    </header>
   );
 }
