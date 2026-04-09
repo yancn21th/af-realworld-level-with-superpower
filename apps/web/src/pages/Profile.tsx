@@ -62,10 +62,10 @@ export default function Profile() {
               )}
               <div className="mt-5">
                 {isOwn ? (
-                  <Button asChild variant="outline" size="sm"
-                    className="h-9 px-5 rounded-btn border-border-gray text-text-secondary hover:text-text-dark font-sans text-nav">
-                    <Link to="/settings">Edit Profile Settings</Link>
-                  </Button>
+                  <Link to="/settings"
+                    className="inline-flex items-center h-9 px-5 rounded-btn border border-border-gray text-text-secondary hover:text-text-dark font-sans text-[14px] font-medium transition-colors">
+                    Edit Profile Settings
+                  </Link>
                 ) : user ? (
                   <Button variant="outline" size="sm" onClick={toggleFollow}
                     className={`h-9 px-5 rounded-btn font-sans text-nav ${profile.following ? 'bg-text-charcoal text-white border-text-charcoal hover:bg-text-dark' : 'border-border-gray text-text-secondary hover:text-text-dark'}`}>

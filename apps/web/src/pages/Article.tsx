@@ -92,10 +92,10 @@ export default function Article() {
             <div className="flex items-center gap-2 ml-2">
               {isAuthor ? (
                 <>
-                  <Button asChild variant="outline" size="sm"
-                    className="h-8 px-4 rounded-btn bg-transparent border-white/30 text-white/80 hover:bg-white/10 hover:text-white font-sans text-btn-sm">
-                    <Link to={`/editor/${article.slug}`}>Edit Article</Link>
-                  </Button>
+                  <Link to={`/editor/${article.slug}`}
+                    className="inline-flex items-center h-8 px-4 rounded-btn border border-white/30 bg-transparent text-white/80 hover:bg-white/10 hover:text-white font-sans text-[13px] font-semibold transition-colors">
+                    Edit Article
+                  </Link>
                   <Button variant="outline" size="sm" onClick={handleDelete}
                     className="h-8 px-4 rounded-btn bg-transparent border-red-400/50 text-red-300 hover:bg-red-500/10 hover:text-red-200 font-sans text-btn-sm">
                     Delete
