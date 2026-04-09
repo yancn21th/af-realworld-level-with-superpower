@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.js';
 import ErrorMessages from '../components/ErrorMessages.js';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 
 export default function Settings() {
   const { user, setUser, logout } = useAuth();
@@ -46,38 +52,52 @@ export default function Settings() {
   }
 
   return (
-    <div className="settings-page">
-      <div className="container page">
-        <div className="row">
-          <div className="col-md-6 offset-md-3 col-xs-12">
-            <h1 className="text-xs-center">Your Settings</h1>
+    <div data-testid="settings-page" className="min-h-screen bg-surface-white py-10 px-4">
+      <div className="max-w-lg mx-auto">
+        <h1 className="font-display text-[32px] font-semibold text-text-dark mb-8">Your Settings</h1>
+        <Card className="border-border-light shadow-card rounded-card">
+          <CardContent className="p-8">
             <ErrorMessages errors={errors} />
-            <form onSubmit={handleSubmit}>
-              <fieldset>
-                <fieldset className="form-group">
-                  <input className="form-control" type="text" placeholder="URL of profile picture" value={image} onChange={e => setImage(e.target.value)} />
-                </fieldset>
-                <fieldset className="form-group">
-                  <input className="form-control form-control-lg" type="text" placeholder="Your Name" value={username} onChange={e => setUsername(e.target.value)} />
-                </fieldset>
-                <fieldset className="form-group">
-                  <textarea className="form-control form-control-lg" rows={8} placeholder="Short bio about you" value={bio} onChange={e => setBio(e.target.value)} />
-                </fieldset>
-                <fieldset className="form-group">
-                  <input className="form-control form-control-lg" type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-                </fieldset>
-                <fieldset className="form-group">
-                  <input className="form-control form-control-lg" type="password" placeholder="New Password" value={password} onChange={e => setPassword(e.target.value)} />
-                </fieldset>
-                <button className="btn btn-lg btn-primary pull-xs-right" type="submit" disabled={loading}>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-2">
+                <Label className="font-sans text-sm font-medium text-text-dark">Profile Picture URL</Label>
+                <Input type="text" placeholder="https://..." value={image} onChange={e => setImage(e.target.value)}
+                  className="h-11 rounded-btn border-border-gray font-sans text-base" />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-sans text-sm font-medium text-text-dark">Username</Label>
+                <Input type="text" placeholder="Your name" value={username} onChange={e => setUsername(e.target.value)}
+                  className="h-11 rounded-btn border-border-gray font-sans text-base" />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-sans text-sm font-medium text-text-dark">Bio</Label>
+                <Textarea rows={5} placeholder="Short bio about you" value={bio} onChange={e => setBio(e.target.value)}
+                  className="rounded-btn border-border-gray font-sans text-base resize-y" />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-sans text-sm font-medium text-text-dark">Email</Label>
+                <Input type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)}
+                  className="h-11 rounded-btn border-border-gray font-sans text-base" />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-sans text-sm font-medium text-text-dark">New Password</Label>
+                <Input type="password" placeholder="Leave blank to keep current" value={password} onChange={e => setPassword(e.target.value)}
+                  className="h-11 rounded-btn border-border-gray font-sans text-base" />
+              </div>
+              <div className="flex justify-end pt-2">
+                <Button type="submit" disabled={loading}
+                  className="px-8 h-11 bg-text-charcoal hover:bg-text-dark text-white font-sans font-semibold rounded-btn transition-colors">
                   {loading ? 'Updating...' : 'Update Settings'}
-                </button>
-              </fieldset>
+                </Button>
+              </div>
             </form>
-            <hr />
-            <button className="btn btn-outline-danger" onClick={handleLogout}>Or click here to logout.</button>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
+        <Separator className="my-6" />
+        <Button variant="outline" onClick={handleLogout}
+          className="w-full h-11 rounded-btn border-destructive/40 text-destructive hover:bg-destructive/5 font-sans font-medium">
+          Log out
+        </Button>
       </div>
     </div>
   );
