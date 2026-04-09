@@ -9,12 +9,20 @@ export default function Pagination({ total, perPage, current, onChange }: Props)
   const pages = Math.ceil(total / perPage);
   if (pages <= 1) return null;
   return (
-    <ul className="pagination">
+    <div className="flex items-center gap-1 mt-6">
       {Array.from({ length: pages }, (_, i) => i + 1).map(page => (
-        <li key={page} className={`page-item ${page === current ? 'active' : ''}`}>
-          <button className="page-link" onClick={() => onChange(page)}>{page}</button>
-        </li>
+        <button
+          key={page}
+          onClick={() => onChange(page)}
+          className={`w-9 h-9 rounded-pill font-sans text-nav font-medium transition-colors ${
+            page === current
+              ? 'bg-brand-blue text-white shadow-card'
+              : 'bg-surface-light text-text-secondary hover:bg-border-gray hover:text-text-dark'
+          }`}
+        >
+          {page}
+        </button>
       ))}
-    </ul>
+    </div>
   );
 }
