@@ -3,6 +3,10 @@ import { Link, useNavigate } from 'react-router';
 import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.js';
 import ErrorMessages from '../components/ErrorMessages.js';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function Login() {
   const { setUser } = useAuth();
@@ -28,26 +32,38 @@ export default function Login() {
   }
 
   return (
-    <div className="auth-page">
-      <div className="container page">
-        <div className="row">
-          <div className="col-md-6 offset-md-3 col-xs-12">
-            <h1 className="text-xs-center">Sign in</h1>
-            <p className="text-xs-center"><Link to="/register">Need an account?</Link></p>
-            <ErrorMessages errors={errors} />
-            <form onSubmit={handleSubmit}>
-              <fieldset className="form-group">
-                <input className="form-control form-control-lg" type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
-              </fieldset>
-              <fieldset className="form-group">
-                <input className="form-control form-control-lg" type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
-              </fieldset>
-              <button className="btn btn-lg btn-primary pull-xs-right" type="submit" disabled={loading}>
-                {loading ? 'Signing in...' : 'Sign in'}
-              </button>
-            </form>
-          </div>
+    <div data-testid="login-page" className="min-h-screen bg-surface-white flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="font-display text-[32px] font-semibold text-text-dark leading-tight">Sign in</h1>
+          <p className="mt-2 font-sans text-base text-text-secondary leading-body">
+            Need an account?{' '}
+            <Link to="/register" className="text-brand-blue hover:text-primary-700 font-medium">Sign up</Link>
+          </p>
         </div>
+        <Card className="border-border-light shadow-card rounded-card">
+          <CardContent className="p-8">
+            <ErrorMessages errors={errors} />
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="font-sans text-sm font-medium text-text-dark">Email</Label>
+                <Input id="email" type="email" placeholder="you@example.com" value={email}
+                  onChange={e => setEmail(e.target.value)} required
+                  className="h-11 rounded-btn border-border-gray font-sans text-base text-text-dark focus-visible:ring-brand-blue" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password" className="font-sans text-sm font-medium text-text-dark">Password</Label>
+                <Input id="password" type="password" placeholder="Your password" value={password}
+                  onChange={e => setPassword(e.target.value)} required
+                  className="h-11 rounded-btn border-border-gray font-sans text-base text-text-dark focus-visible:ring-brand-blue" />
+              </div>
+              <Button type="submit" disabled={loading}
+                className="w-full h-11 bg-text-charcoal hover:bg-text-dark text-white font-sans font-semibold rounded-btn transition-colors">
+                {loading ? 'Signing in...' : 'Sign in'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
