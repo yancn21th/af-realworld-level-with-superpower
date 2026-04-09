@@ -6,7 +6,6 @@ import Pagination from '../components/Pagination.js';
 import TagList from '../components/TagList.js';
 
 const PER_PAGE = 10;
-
 type FeedTab = 'global' | 'feed' | 'tag';
 
 export default function Home() {
@@ -19,105 +18,79 @@ export default function Home() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Load tags once
   useEffect(() => {
     api.getTags().then(r => setTags(r.tags)).catch(() => {});
   }, []);
 
-  // Reset to global when user logs out
   useEffect(() => {
     if (!user && tab === 'feed') setTab('global');
   }, [user]);
 
-  // Load articles whenever tab/page/tag changes
   useEffect(() => {
     setLoading(true);
     const offset = (page - 1) * PER_PAGE;
     const params = { limit: PER_PAGE, offset };
-    const req = tab === 'feed'
-      ? api.getFeed(params)
-      : tab === 'tag' && selectedTag
-        ? api.getArticles({ ...params, tag: selectedTag })
-        : api.getArticles(params);
-
+    const req = tab === 'feed' ? api.getFeed(params)
+      : tab === 'tag' && selectedTag ? api.getArticles({ ...params, tag: selectedTag })
+      : api.getArticles(params);
     req
       .then((r: any) => { setArticles(r.articles); setArticlesCount(r.articlesCount); })
       .catch(() => { setArticles([]); setArticlesCount(0); })
       .finally(() => setLoading(false));
   }, [tab, page, selectedTag]);
 
-  function selectTag(tag: string) {
-    setSelectedTag(tag);
-    setTab('tag');
-    setPage(1);
-  }
-
-  function switchTab(t: FeedTab) {
-    setTab(t);
-    setSelectedTag(null);
-    setPage(1);
-  }
+  function selectTag(tag: string) { setSelectedTag(tag); setTab('tag'); setPage(1); }
+  function switchTab(t: FeedTab) { setTab(t); setSelectedTag(null); setPage(1); }
 
   return (
-    <div className="home-page">
+    <div data-testid="home-page" className="min-h-screen bg-surface-white">
       {!user && (
-        <div className="banner">
-          <div className="container">
-            <h1 className="logo-font">conduit</h1>
-            <p>A place to share your knowledge.</p>
+        <section data-testid="hero-banner" className="bg-surface-white border-b border-border-light py-20 px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="font-display font-medium text-text-dark" style={{ fontSize: '80px', lineHeight: '1.10' }}>
+              conduit
+            </h1>
+            <p className="mt-6 font-sans text-body-lg text-text-secondary leading-body">
+              A place to share your knowledge.
+            </p>
           </div>
-        </div>
+        </section>
       )}
-
-      <div className="container page">
-        <div className="row">
-          <div className="col-md-9">
-            <div className="feed-toggle">
-              <ul className="nav nav-pills outline-active">
-                {user && (
-                  <li className="nav-item">
-                    <button className={`nav-link ${tab === 'feed' ? 'active' : ''}`} onClick={() => switchTab('feed')}>
-                      Your Feed
-                    </button>
-                  </li>
-                )}
-                <li className="nav-item">
-                  <button className={`nav-link ${tab === 'global' ? 'active' : ''}`} onClick={() => switchTab('global')}>
-                    Global Feed
-                  </button>
-                </li>
-                {tab === 'tag' && selectedTag && (
-                  <li className="nav-item">
-                    <button className="nav-link active">
-                      <i className="ion-pound" /> {selectedTag}
-                    </button>
-                  </li>
-                )}
-              </ul>
+      <div className="max-w-6xl mx-auto px-6 py-10">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex-1 min-w-0">
+            <div data-testid="feed-tabs" className="flex items-center gap-1 mb-6 p-1 bg-surface-light rounded-pill w-fit">
+              {user && (
+                <button data-testid="tab-feed" onClick={() => switchTab('feed')}
+                  className={`px-5 py-2 rounded-pill font-sans text-nav font-medium transition-colors ${tab === 'feed' ? 'bg-surface-white text-text-dark shadow-card' : 'text-text-secondary hover:text-text-dark'}`}>
+                  Your Feed
+                </button>
+              )}
+              <button data-testid="tab-global" onClick={() => switchTab('global')}
+                className={`px-5 py-2 rounded-pill font-sans text-nav font-medium transition-colors ${tab === 'global' ? 'bg-surface-white text-text-dark shadow-card' : 'text-text-secondary hover:text-text-dark'}`}>
+                Global Feed
+              </button>
+              {tab === 'tag' && selectedTag && (
+                <button className="px-5 py-2 rounded-pill font-sans text-nav font-medium bg-brand-blue text-white shadow-card">
+                  # {selectedTag}
+                </button>
+              )}
             </div>
-
-            {loading && <div className="article-preview">Loading articles...</div>}
-            {!loading && articles.length === 0 && (
-              <div className="article-preview">No articles are here... yet.</div>
+            {loading && <div className="py-12 text-center font-sans text-text-muted">Loading articles...</div>}
+            {!loading && articles.length === 0 && <div className="py-12 text-center font-sans text-text-muted">No articles are here... yet.</div>}
+            {!loading && (
+              <div className="space-y-4">
+                {articles.map(a => <ArticlePreview key={a.slug} article={a} />)}
+              </div>
             )}
-            {!loading && articles.map(a => (
-              <ArticlePreview key={a.slug} article={a} />
-            ))}
-
-            <Pagination
-              total={articlesCount}
-              perPage={PER_PAGE}
-              current={page}
-              onChange={p => setPage(p)}
-            />
+            <Pagination total={articlesCount} perPage={PER_PAGE} current={page} onChange={p => setPage(p)} />
           </div>
-
-          <div className="col-md-3">
-            <div className="sidebar">
-              <p>Popular Tags</p>
+          <aside className="lg:w-64 shrink-0">
+            <div className="bg-surface-light rounded-card-md p-5">
+              <p className="font-sans text-sm font-semibold text-text-dark mb-3">Popular Tags</p>
               <TagList tags={tags} selected={selectedTag} onSelect={selectTag} />
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </div>
