@@ -6,3 +6,4 @@ dist/
 .env
 .superpowers/
 drizzle/
+DESIGN.md
