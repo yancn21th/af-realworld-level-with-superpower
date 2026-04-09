@@ -4,6 +4,7 @@ import { api } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.js';
 import ArticlePreview from '../components/ArticlePreview.js';
 import Pagination from '../components/Pagination.js';
+import { Button } from '@/components/ui/button';
 
 const PER_PAGE = 10;
 
@@ -20,9 +21,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (!username) return;
-    api.getProfile(username)
-      .then(r => setProfile(r.profile))
-      .catch(() => {});
+    api.getProfile(username).then(r => setProfile(r.profile)).catch(() => {});
   }, [username]);
 
   useEffect(() => {
@@ -49,60 +48,54 @@ export default function Profile() {
   const isOwn = user?.username === username;
 
   return (
-    <div className="profile-page">
-      <div className="user-info">
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-md-10 offset-md-1">
-              {profile && (
-                <>
-                  <img src={profile.image ?? 'https://static.productionready.io/images/smiley-cyrus.jpg'} className="user-img" alt={profile.username} />
-                  <h4>{profile.username}</h4>
-                  <p>{profile.bio}</p>
-                  {isOwn ? (
-                    <Link className="btn btn-sm btn-outline-secondary action-btn" to="/settings">
-                      <i className="ion-gear-a" /> Edit Profile Settings
-                    </Link>
-                  ) : user ? (
-                    <button
-                      className={`btn btn-sm action-btn ${profile.following ? 'btn-secondary' : 'btn-outline-secondary'}`}
-                      onClick={toggleFollow}
-                    >
-                      <i className="ion-plus-round" /> {profile.following ? 'Unfollow' : 'Follow'} {profile.username}
-                    </button>
-                  ) : null}
-                </>
+    <div data-testid="profile-page" className="min-h-screen bg-surface-white">
+      <div className="bg-surface-light border-b border-border-light py-12 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          {profile && (
+            <>
+              <img src={profile.image ?? 'https://static.productionready.io/images/smiley-cyrus.jpg'}
+                alt={profile.username}
+                className="w-20 h-20 rounded-full object-cover mx-auto border-4 border-surface-white shadow-card" />
+              <h1 className="mt-4 font-display text-[28px] font-semibold text-text-dark">{profile.username}</h1>
+              {profile.bio && (
+                <p className="mt-2 font-sans text-base text-text-secondary leading-body max-w-md mx-auto">{profile.bio}</p>
               )}
-            </div>
-          </div>
+              <div className="mt-5">
+                {isOwn ? (
+                  <Button asChild variant="outline" size="sm"
+                    className="h-9 px-5 rounded-btn border-border-gray text-text-secondary hover:text-text-dark font-sans text-nav">
+                    <Link to="/settings">Edit Profile Settings</Link>
+                  </Button>
+                ) : user ? (
+                  <Button variant="outline" size="sm" onClick={toggleFollow}
+                    className={`h-9 px-5 rounded-btn font-sans text-nav ${profile.following ? 'bg-text-charcoal text-white border-text-charcoal hover:bg-text-dark' : 'border-border-gray text-text-secondary hover:text-text-dark'}`}>
+                    {profile.following ? `Unfollow ${profile.username}` : `Follow ${profile.username}`}
+                  </Button>
+                ) : null}
+              </div>
+            </>
+          )}
         </div>
       </div>
-
-      <div className="container">
-        <div className="row">
-          <div className="col-xs-12 col-md-10 offset-md-1">
-            <div className="articles-toggle">
-              <ul className="nav nav-pills outline-active">
-                <li className="nav-item">
-                  <Link className={`nav-link ${!isFavoritesTab ? 'active' : ''}`} to={`/profile/${username}`}>
-                    My Articles
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className={`nav-link ${isFavoritesTab ? 'active' : ''}`} to={`/profile/${username}/favorites`}>
-                    Favorited Articles
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {loading && <div className="article-preview">Loading...</div>}
-            {!loading && articles.length === 0 && <div className="article-preview">No articles here yet.</div>}
-            {!loading && articles.map(a => <ArticlePreview key={a.slug} article={a} />)}
-
-            <Pagination total={articlesCount} perPage={PER_PAGE} current={page} onChange={p => { setPage(p); }} />
-          </div>
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        <div data-testid="profile-tabs" className="flex items-center gap-1 mb-6 p-1 bg-surface-light rounded-pill w-fit">
+          <Link to={`/profile/${username}`}
+            className={`px-5 py-2 rounded-pill font-sans text-nav font-medium transition-colors ${!isFavoritesTab ? 'bg-surface-white text-text-dark shadow-card' : 'text-text-secondary hover:text-text-dark'}`}>
+            My Articles
+          </Link>
+          <Link to={`/profile/${username}/favorites`}
+            className={`px-5 py-2 rounded-pill font-sans text-nav font-medium transition-colors ${isFavoritesTab ? 'bg-surface-white text-text-dark shadow-card' : 'text-text-secondary hover:text-text-dark'}`}>
+            Favorited Articles
+          </Link>
         </div>
+        {loading && <div className="py-12 text-center font-sans text-text-muted">Loading...</div>}
+        {!loading && articles.length === 0 && <div className="py-12 text-center font-sans text-text-muted">No articles here yet.</div>}
+        {!loading && (
+          <div className="space-y-4">
+            {articles.map(a => <ArticlePreview key={a.slug} article={a} />)}
+          </div>
+        )}
+        <Pagination total={articlesCount} perPage={PER_PAGE} current={page} onChange={setPage} />
       </div>
     </div>
   );
