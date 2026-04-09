@@ -38,33 +38,66 @@ export default function ArticlePreview({ article: initial, onUpdate }: Props) {
   }
 
   return (
-    <div className="article-preview">
-      <div className="article-meta">
-        <Link to={`/profile/${article.author.username}`}>
-          <img src={article.author.image ?? 'https://static.productionready.io/images/smiley-cyrus.jpg'} alt={article.author.username} />
-        </Link>
-        <div className="info">
-          <Link className="author" to={`/profile/${article.author.username}`}>{article.author.username}</Link>
-          <span className="date">{new Date(article.createdAt).toDateString()}</span>
+    <article
+      data-testid="article-preview"
+      className="bg-surface-white rounded-card border border-border-light p-6 shadow-card hover:shadow-card-elevated transition-shadow"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Link to={`/profile/${article.author.username}`}>
+            <img
+              src={article.author.image ?? 'https://static.productionready.io/images/smiley-cyrus.jpg'}
+              alt={article.author.username}
+              className="w-9 h-9 rounded-full object-cover"
+            />
+          </Link>
+          <div>
+            <Link
+              to={`/profile/${article.author.username}`}
+              className="font-sans text-sm font-semibold text-brand-blue hover:text-primary-700 transition-colors"
+            >
+              {article.author.username}
+            </Link>
+            <p className="font-sans text-[12px] text-text-muted leading-body">
+              {new Date(article.createdAt).toDateString()}
+            </p>
+          </div>
         </div>
         <button
-          className={`btn btn-sm pull-xs-right ${article.favorited ? 'btn-primary' : 'btn-outline-primary'}`}
           onClick={toggleFavorite}
-          disabled={loading}
+          disabled={loading || !user}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn font-sans text-btn-sm font-semibold transition-colors ${
+            article.favorited
+              ? 'bg-brand-blue text-white hover:bg-primary-700'
+              : 'bg-surface-light text-text-secondary hover:bg-border-gray'
+          } disabled:opacity-50`}
         >
-          <i className="ion-heart" /> {article.favoritesCount}
+          {String.fromCodePoint(0x2665)} {article.favoritesCount}
         </button>
       </div>
-      <Link className="preview-link" to={`/article/${article.slug}`}>
-        <h1>{article.title}</h1>
-        <p>{article.description}</p>
-        <span>Read more...</span>
-        <ul className="tag-list">
-          {article.tagList.map(tag => (
-            <li key={tag} className="tag-default tag-pill tag-outline">{tag}</li>
-          ))}
-        </ul>
+      <Link to={`/article/${article.slug}`} className="block mt-4 group">
+        <h2 className="font-display text-[22px] font-semibold text-text-dark leading-snug group-hover:text-brand-blue transition-colors">
+          {article.title}
+        </h2>
+        <p className="mt-1 font-sans text-base text-text-secondary leading-body line-clamp-2">
+          {article.description}
+        </p>
+        <span className="mt-3 inline-block font-sans text-nav text-text-muted group-hover:text-brand-blue transition-colors">
+          Read more...
+        </span>
       </Link>
-    </div>
+      {article.tagList.length > 0 && (
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {article.tagList.map(tag => (
+            <span
+              key={tag}
+              className="px-2.5 py-0.5 rounded-pill bg-surface-light font-sans text-label text-text-secondary"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </article>
   );
 }
