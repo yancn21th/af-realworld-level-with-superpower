@@ -5,5 +5,3 @@ dist/
 *.db-shm
 .env
 .superpowers/
-drizzle/
-DESIGN.md

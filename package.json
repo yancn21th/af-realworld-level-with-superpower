@@ -2,7 +2,7 @@
   "name": "realworld-app",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"pnpm --filter api dev\" \"pnpm --filter web dev\"",
+    "dev": "concurrently \"pnpm --filter api dev\" \"pnpm --filter web dev --host\"",
     "test:api": "HOST=http://localhost:8000 bash realworld/specs/api/run-api-tests-hurl.sh",
     "test:e2e": "pnpm --filter web exec playwright test"
   },
