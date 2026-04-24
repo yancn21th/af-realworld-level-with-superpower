@@ -92,11 +92,37 @@ All variables have sensible defaults for local development. No `.env` file is re
 
 ## How It Was Built
 
-This entire codebase was produced through the Superpowers workflow in two major phases:
+This project was an experiment in building a full-stack application entirely through AI agent-driven development. The process naturally split into two steps, each revealing different challenges.
 
-1. **Phase 1 — Full-Stack Implementation** (2026-04-08): Backend API + React frontend, verified against all 149 official Hurl API tests. See the [implementation plan](docs/superpowers/plans/2026-04-08-realworld-fullstack.md) and [QA report](docs/qa/2026-04-08-quality-assurance-report.md).
+### Step 1 — Functional Implementation via Superpowers + RealWorld Spec
 
-2. **Phase 2 — MiniMax UI Redesign** (2026-04-09): Complete UI overhaul replacing Bootstrap-style CSS with shadcn/ui components styled to a MiniMax-inspired design system, verified by Playwright visual tests. See the [redesign plan](docs/superpowers/plans/2026-04-09-minimax-ui-redesign.md).
+The first step fed the Superpowers workflow with the [RealWorld](https://github.com/gothinkster/realworld) source code and spec as input. The agents produced a working backend API and React frontend, verified against all 149 official Hurl API tests. The functional result was solid — every API endpoint, every error shape, every edge case matched the spec.
+
+However, the UI that came out of this step was problematic. Without explicit visual design guidance, the agents produced a generic, unstyled interface that didn't feel like a real product.
+
+See: [implementation plan](docs/superpowers/plans/2026-04-08-realworld-fullstack.md) · [QA report](docs/qa/2026-04-08-quality-assurance-report.md)
+
+### Step 2 — Visual Redesign via DESIGN.md
+
+To fix the UI problem, I introduced a [DESIGN.md](DESIGN.md) — a structured design document capturing colors, typography, spacing, shadows, and component patterns inspired by MiniMax's design language. The agents then performed a complete UI overhaul, replacing Bootstrap-style CSS with shadcn/ui components styled to this design system, verified by Playwright visual tests.
+
+The final result met expectations: a fully functional, spec-compliant, and visually polished application — built end-to-end by AI agents.
+
+See: [redesign plan](docs/superpowers/plans/2026-04-09-minimax-ui-redesign.md)
+
+## Open Questions
+
+The experiment worked, but it raised questions that are worth further exploration:
+
+- **What was the real key to success — the spec or the agent?** The RealWorld project provides an exceptionally well-defined spec: OpenAPI schema, Hurl test suites with 149 requests, detailed error format contracts, and reference implementations. This gave the agents unambiguous acceptance criteria at every step. Would the result have been as good without such a rigorous spec?
+
+- **Can we create specs as good as RealWorld for new projects?** If the spec is the critical success factor, then the bottleneck in agent-driven development isn't the coding — it's the specification. For a brand-new product with no existing test suite or reference implementation, can we (or the agents themselves) produce a spec of comparable quality? What does that process look like?
+
+- **Where do agents fall short without human intervention?** The UI gap in Step 1 showed that agents optimise for what's measurable (test pass rates) but miss what's qualitative (visual design, UX feel). Introducing DESIGN.md was a human decision. What other "human-shaped gaps" exist in agent-driven workflows?
+
+- **How does spec quality scale with project complexity?** RealWorld is deliberately small — a blog platform with CRUD, auth, and social features. Would this approach hold up for a project with real-time collaboration, complex state machines, or multi-service architectures?
+
+These are not answered here — they're the motivation for further experiments.
 
 ## RealWorld Spec Compliance
 
